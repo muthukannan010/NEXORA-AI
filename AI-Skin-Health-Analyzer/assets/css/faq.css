@@ -1,0 +1,71 @@
+/*
+ * FAQ Page Styles
+ */
+
+.faq-hero {
+  padding: 150px 0 80px;
+  text-align: center;
+  background: linear-gradient(to bottom, var(--bg-color), var(--white));
+}
+
+.faq-container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.accordion {
+  margin-top: 2rem;
+}
+
+.accordion-item {
+  background: var(--white);
+  border: 1px solid rgba(0,0,0,0.05);
+  border-radius: var(--border-radius);
+  margin-bottom: 1rem;
+  box-shadow: var(--soft-shadow);
+  overflow: hidden;
+}
+
+.accordion-header {
+  padding: 1.5rem;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 600;
+  font-size: 1.1rem;
+  transition: var(--transition-smooth);
+}
+
+.accordion-header:hover {
+  background: rgba(0, 168, 150, 0.05);
+}
+
+.accordion-header i {
+  color: var(--primary-color);
+  transition: transform 0.3s ease;
+}
+
+.accordion-item.active .accordion-header i {
+  transform: rotate(180deg);
+}
+
+.accordion-item.active .accordion-header {
+  color: var(--primary-color);
+}
+
+.accordion-content {
+  padding: 0 1.5rem;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out, padding 0.3s ease;
+  background: #fafafa;
+}
+
+.accordion-item.active .accordion-content {
+  padding: 1.5rem;
+}
+
+.accordion-content p {
+  margin: 0;
+}

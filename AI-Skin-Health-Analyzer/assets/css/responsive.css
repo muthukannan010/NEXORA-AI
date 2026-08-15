@@ -1,0 +1,147 @@
+/* 
+ * Responsive Media Queries
+ */
+
+/* Laptop (901px - 1199px) */
+@media (max-width: 1199px) {
+  /* Hero */
+  .hero-grid {
+    gap: 40px;
+  }
+}
+
+/* Tablet (601px - 900px) */
+@media (max-width: 900px) {
+  
+  /* Container adjustments */
+  .container {
+    width: min(100%, calc(100% - 40px));
+  }
+
+  /* Navbar Mobile Mode */
+  .navbar-toggle {
+    display: block;
+    z-index: 1001;
+  }
+
+  .navbar-collapse {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 300px;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: right var(--transition);
+    box-shadow: -5px 0 20px rgba(0,0,0,0.1);
+    gap: 24px;
+    z-index: 1000;
+  }
+  
+  .navbar-collapse.active {
+    right: 0;
+  }
+
+  .navbar-menu {
+    flex-direction: column;
+    gap: 16px;
+    text-align: center;
+  }
+  
+  .navbar-cta {
+    margin-top: 16px;
+  }
+  
+  /* Hero */
+  .hero-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  
+  .hero-image-container {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  /* Features */
+  .features-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Results */
+  .result-primary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .result-image-wrapper img {
+    max-height: 400px;
+  }
+
+  /* Footer */
+  .footer-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Mobile (320px - 600px) */
+@media (max-width: 600px) {
+  
+  /* Typography */
+  .section-title {
+    font-size: 2rem;
+  }
+
+  /* Hero */
+  .hero-stats {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  
+  .hero-buttons {
+    flex-direction: column;
+  }
+  
+  .btn {
+    width: 100%;
+  }
+
+  /* Features */
+  .features-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Results */
+  .result-details-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .prob-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .prob-name, .prob-value, .prob-track {
+    width: 100%;
+    margin: 0;
+    text-align: left;
+  }
+
+  /* Footer */
+  .footer-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .footer-socials {
+    justify-content: flex-start;
+  }
+}

@@ -1,0 +1,64 @@
+/*
+ * About Page Styles
+ */
+
+.about-hero {
+  padding: 150px 0 80px;
+  text-align: center;
+  background: linear-gradient(to bottom, var(--bg-color), var(--white));
+}
+
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+  margin: 4rem 0;
+}
+
+.about-content h3 {
+  color: var(--primary-color);
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+}
+
+.mission-vision {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-top: 4rem;
+}
+
+.tech-stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.tech-badge {
+  background: var(--bg-color);
+  padding: 10px 20px;
+  border-radius: 50px;
+  font-weight: 500;
+  color: var(--text-dark);
+  box-shadow: var(--soft-shadow);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.tech-badge i {
+  color: var(--primary-color);
+  font-size: 1.2rem;
+}
+
+@media (max-width: 768px) {
+  .about-grid {
+    grid-template-columns: 1fr;
+  }
+  .mission-vision {
+    grid-template-columns: 1fr;
+  }
+}

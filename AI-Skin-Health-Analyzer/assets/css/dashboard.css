@@ -1,0 +1,212 @@
+/* assets/css/dashboard.css */
+
+.dashboard-container {
+    padding-top: 100px;
+    padding-bottom: 60px;
+    min-height: calc(100vh - 76px);
+}
+
+.dashboard-header {
+    margin-bottom: 32px;
+}
+
+.dashboard-header h1 {
+    font-size: 2.25rem;
+    color: var(--text);
+}
+
+.dashboard-header p {
+    font-size: 1.1rem;
+    color: var(--muted);
+}
+
+/* Stats Grid */
+.dashboard-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 24px;
+    margin-bottom: 40px;
+}
+
+.stat-card {
+    padding: 24px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: var(--soft-shadow);
+}
+
+.stat-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-md);
+    background: rgba(0, 168, 150, 0.1);
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+
+.stat-details h3 {
+    font-size: 0.9rem;
+    color: var(--muted);
+    font-weight: 500;
+    margin-bottom: 4px;
+}
+
+.stat-details .stat-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text);
+}
+
+/* Quick Actions Grid */
+.quick-actions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 40px;
+}
+
+.action-card {
+    padding: 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    text-align: center;
+    transition: var(--transition);
+    cursor: pointer;
+    box-shadow: var(--soft-shadow);
+    color: var(--text);
+    display: block;
+}
+
+.action-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.action-card i {
+    font-size: 2rem;
+    margin-bottom: 12px;
+    color: var(--primary);
+}
+
+.action-card span {
+    display: block;
+    font-weight: 500;
+}
+
+/* Recent Scans Table */
+.dashboard-section-title {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+}
+
+.table-responsive {
+    overflow-x: auto;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--soft-shadow);
+}
+
+.scan-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.scan-table th, .scan-table td {
+    padding: 16px;
+    border-bottom: 1px solid var(--border);
+}
+
+.scan-table th {
+    background: var(--background);
+    color: var(--muted);
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.scan-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.scan-table tbody tr:hover {
+    background: rgba(0,0,0,0.02);
+}
+
+.scan-img-thumb {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.badge {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.badge-low { background: rgba(34, 197, 94, 0.1); color: var(--success); }
+.badge-medium { background: rgba(245, 158, 11, 0.1); color: var(--warning); }
+.badge-high { background: rgba(239, 68, 68, 0.1); color: var(--danger); }
+
+.table-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-icon-small {
+    background: none;
+    border: none;
+    color: var(--muted);
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 4px;
+    transition: var(--transition);
+}
+
+.btn-icon-small:hover {
+    color: var(--primary);
+}
+
+.btn-icon-small.delete:hover {
+    color: var(--danger);
+}
+
+@media (max-width: 768px) {
+    .scan-table thead {
+        display: none;
+    }
+    .scan-table, .scan-table tbody, .scan-table tr, .scan-table td {
+        display: block;
+        width: 100%;
+    }
+    .scan-table tr {
+        margin-bottom: 16px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        padding: 16px;
+    }
+    .scan-table td {
+        border: none;
+        padding: 8px 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .scan-table td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: var(--muted);
+    }
+}

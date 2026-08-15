@@ -1,0 +1,53 @@
+/* 
+ * CSS Variables 
+ * Professional Healthcare Dashboard Palette
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+:root {
+    --primary: #00A896;
+    --secondary: #0077B6;
+    --accent: #38BDF8;
+
+    --success: #22C55E;
+    --warning: #F59E0B;
+    --danger: #EF4444;
+
+    --background: #F7FAFC;
+    --surface: #FFFFFF;
+
+    --text: #1F2937;
+    --muted: #64748B;
+
+    --border: #E5E7EB;
+
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 20px;
+    --radius-xl: 28px;
+
+    --container: 1180px;
+
+    /* Base Font Family */
+    --font-family: 'Poppins', sans-serif;
+    
+    /* UI Elements */
+    --soft-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    --glass-bg: rgba(255, 255, 255, 0.85);
+    --glass-border: 1px solid var(--border);
+    
+    /* Animation */
+    --transition: all 0.2s ease-in-out;
+}
+
+/* Dark Mode Variables */
+[data-theme="dark"] {
+    --background: #0f172a;
+    --surface: #1e293b;
+    --text: #f8fafc;
+    --muted: #94a3b8;
+    --border: rgba(255, 255, 255, 0.1);
+    --glass-bg: rgba(30, 41, 59, 0.85);
+    --soft-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.1);
+}
