@@ -1,37 +1,13 @@
-// services/supabase.js
-// Mocked Supabase Client for Development
+// assets/js/services/supabase.js
+// Real Supabase Client using ESM CDN — no build tool required.
 
-export const supabase = {
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+import { SUPABASE_URL, SUPABASE_ANON_KEY } from '../config.js';
+
+export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
     auth: {
-        signUp: async ({ email, password }) => {
-            console.log('Mock: User signed up', email);
-            return { data: { user: { id: 'mock-uuid-123', email } }, error: null };
-        },
-        signInWithPassword: async ({ email, password }) => {
-            console.log('Mock: User signed in', email);
-            return { data: { user: { id: 'mock-uuid-123', email } }, error: null };
-        },
-        signOut: async () => {
-            console.log('Mock: User signed out');
-            return { error: null };
-        },
-        getUser: async () => {
-            return { data: { user: null }, error: null };
-        }
-    },
-    from: (table) => ({
-        select: () => ({
-            eq: () => ({ data: [], error: null })
-        }),
-        insert: (data) => {
-            console.log(`Mock: Inserted into ${table}`, data);
-            return { data, error: null };
-        },
-        update: (data) => ({
-            eq: () => {
-                console.log(`Mock: Updated ${table}`, data);
-                return { data, error: null };
-            }
-        })
-    })
-};
+        persistSession: true,
+        autoRefreshToken: true,
+        detectSessionInUrl: true
+    }
+});

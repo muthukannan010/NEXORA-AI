@@ -1,31 +1,51 @@
 // assets/js/components/Login.js
-import { supabase } from '../services/supabase.js';
+import { signIn } from '../services/auth.js';
+import { toast } from '../utils/toast.js';
+import { isValidEmail, getAuthErrorMessage, clearFormErrors } from '../utils/validation.js';
 import { state } from '../state.js';
+import { fetchProfile } from '../services/profile.js';
 
 export function Login() {
     return `
         <div class="auth-container fade-in">
             <div class="auth-left">
                 <div class="auth-left-content">
-                    <h1>NEXORA ai</h1>
+                    <i class="fa-solid fa-microscope auth-brand-icon"></i>
+                    <h1>NEXORA <span class="brand-ai">ai</span></h1>
                     <p>AI-Powered Skin Health Analysis. Upload a skin image or use your camera to receive AI-based informational insights about your skin.</p>
+                    <div class="auth-features">
+                        <div class="auth-feature-item"><i class="fa-solid fa-check"></i> AI Skin Analysis</div>
+                        <div class="auth-feature-item"><i class="fa-solid fa-check"></i> Secure & Private</div>
+                        <div class="auth-feature-item"><i class="fa-solid fa-check"></i> Scan History</div>
+                    </div>
                 </div>
             </div>
             <div class="auth-right">
                 <div class="auth-form-wrapper glass-card">
+                    <div class="auth-logo-mobile">
+                        <i class="fa-solid fa-microscope"></i> NEXORA ai
+                    </div>
                     <h2>Welcome Back</h2>
-                    <p>Sign in to your account to continue</p>
+                    <p class="auth-subtitle">Sign in to your account to continue</p>
                     
-                    <form id="login-form">
+                    <div id="auth-error-banner" class="auth-error-banner" style="display:none;"></div>
+                    
+                    <form id="login-form" novalidate>
                         <div class="form-group">
-                            <label for="email">Email Address</label>
-                            <input type="email" id="email" class="form-control" placeholder="you@example.com" required>
+                            <label for="login-email">Email Address</label>
+                            <div class="input-icon-wrap">
+                                <i class="fa-regular fa-envelope input-icon"></i>
+                                <input type="email" id="login-email" class="form-control" placeholder="you@example.com" autocomplete="email" required>
+                            </div>
                         </div>
                         
                         <div class="form-group">
-                            <label for="password">Password</label>
+                            <label for="login-password">Password</label>
                             <div class="password-input">
-                                <input type="password" id="password" class="form-control" placeholder="••••••••" required>
+                                <div class="input-icon-wrap">
+                                    <i class="fa-solid fa-lock input-icon"></i>
+                                    <input type="password" id="login-password" class="form-control" placeholder="••••••••" autocomplete="current-password" required>
+                                </div>
                                 <button type="button" class="password-toggle" id="toggle-password" aria-label="Toggle Password Visibility">
                                     <i class="fa-regular fa-eye"></i>
                                 </button>
@@ -40,21 +60,20 @@ export function Login() {
                             <a href="/forgot-password" data-link class="forgot-link">Forgot Password?</a>
                         </div>
                         
-                        <button type="submit" class="btn btn-primary" style="width: 100%;" id="login-btn">
+                        <button type="submit" class="btn btn-primary btn-full" id="login-btn">
                             Login <i class="fa-solid fa-arrow-right"></i>
                         </button>
                     </form>
                     
-                    <div class="auth-divider">
-                        <span>OR</span>
-                    </div>
+                    <div class="auth-divider"><span>OR</span></div>
                     
-                    <button class="btn btn-google" id="google-login-btn">
+                    <button class="btn btn-google btn-full" id="google-login-btn" disabled title="Google login coming soon">
                         <i class="fa-brands fa-google" style="color: #DB4437; margin-right: 8px;"></i> Continue with Google
+                        <span class="coming-soon-badge">Soon</span>
                     </button>
                     
                     <div class="auth-footer">
-                        Don't have an account? <a href="/register" data-link>Create Account</a>
+                        Don't have an account? <a href="/register" data-link class="auth-link">Create Account</a>
                     </div>
                 </div>
             </div>
@@ -63,63 +82,93 @@ export function Login() {
 }
 
 export function initLogin(router) {
+    // If already logged in, go to dashboard
+    if (state.get('currentUser')) {
+        const redirect = sessionStorage.getItem('auth_redirect') || '/dashboard';
+        sessionStorage.removeItem('auth_redirect');
+        router.navigateTo(redirect);
+        return;
+    }
+
     const loginForm = document.getElementById('login-form');
     const togglePasswordBtn = document.getElementById('toggle-password');
-    const passwordInput = document.getElementById('password');
+    const passwordInput = document.getElementById('login-password');
+    const emailInput = document.getElementById('login-email');
     const loginBtn = document.getElementById('login-btn');
-    const googleLoginBtn = document.getElementById('google-login-btn');
+    const errorBanner = document.getElementById('auth-error-banner');
 
-    if (togglePasswordBtn) {
+    function showError(msg) {
+        if (errorBanner) {
+            errorBanner.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> ${msg}`;
+            errorBanner.style.display = 'flex';
+        }
+    }
+    function hideError() {
+        if (errorBanner) errorBanner.style.display = 'none';
+    }
+
+    if (togglePasswordBtn && passwordInput) {
         togglePasswordBtn.addEventListener('click', () => {
-            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-            passwordInput.setAttribute('type', type);
-            togglePasswordBtn.innerHTML = type === 'password' ? '<i class="fa-regular fa-eye"></i>' : '<i class="fa-regular fa-eye-slash"></i>';
+            const isPassword = passwordInput.type === 'password';
+            passwordInput.type = isPassword ? 'text' : 'password';
+            togglePasswordBtn.querySelector('i').className = isPassword
+                ? 'fa-regular fa-eye-slash'
+                : 'fa-regular fa-eye';
         });
     }
 
     if (loginForm) {
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const email = document.getElementById('email').value;
-            const password = passwordInput.value;
-            
-            // Basic UI loading state
-            const originalText = loginBtn.innerHTML;
+            hideError();
+            clearFormErrors(loginForm);
+
+            const email = emailInput?.value?.trim() || '';
+            const password = passwordInput?.value || '';
+
+            if (!email || !isValidEmail(email)) {
+                showError('Please enter a valid email address.');
+                emailInput?.focus();
+                return;
+            }
+            if (!password) {
+                showError('Please enter your password.');
+                passwordInput?.focus();
+                return;
+            }
+
+            const originalHTML = loginBtn.innerHTML;
             loginBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Logging in...';
             loginBtn.disabled = true;
 
             try {
-                // Mock Auth flow for demo. Replace with real Supabase later if keys provided.
-                if (typeof supabase !== 'undefined' && supabase.auth) {
-                    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-                    if (error) throw error;
-                    
-                    state.set('currentUser', data.user);
-                    state.set('session', data.session);
-                    
-                    // Show success toast (need to implement Toast system later)
-                    console.log("Success: Profile authenticated");
-                    router.navigateTo('/dashboard');
-                } else {
-                    // Mock success
-                    setTimeout(() => {
-                        state.set('currentUser', { id: '123', email });
-                        router.navigateTo('/dashboard');
-                    }, 1000);
+                const { data, error } = await signIn(email, password);
+                if (error) throw error;
+
+                // Check email verified
+                if (!data.user.email_confirmed_at) {
+                    toast.warning('Please verify your email address first.');
+                    router.navigateTo('/verify-email');
+                    return;
                 }
+
+                // Fetch profile after login
+                await fetchProfile().catch(() => {});
+
+                toast.success('Welcome back!');
+                const redirect = sessionStorage.getItem('auth_redirect') || '/dashboard';
+                sessionStorage.removeItem('auth_redirect');
+                router.navigateTo(redirect);
             } catch (err) {
-                console.error('Auth error', err);
-                alert(err.message || 'Invalid email or password');
+                const msg = getAuthErrorMessage(err);
+                showError(msg);
+                if (msg.toLowerCase().includes('verify')) {
+                    router.navigateTo('/verify-email');
+                }
             } finally {
-                loginBtn.innerHTML = originalText;
+                loginBtn.innerHTML = originalHTML;
                 loginBtn.disabled = false;
             }
-        });
-    }
-
-    if (googleLoginBtn) {
-        googleLoginBtn.addEventListener('click', () => {
-            alert('Google login coming soon.');
         });
     }
 }
