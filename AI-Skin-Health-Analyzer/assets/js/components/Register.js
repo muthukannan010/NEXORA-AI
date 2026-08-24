@@ -206,8 +206,15 @@ export function initRegister(router) {
                 const { data, error } = await signUp({ email, password, firstName, lastName });
                 if (error) throw error;
 
-                toast.success('Account created! Please check your email to verify your account.');
-                router.navigateTo('/verify-email');
+                if (data.session) {
+                    state.set('currentUser', data.user);
+                    state.set('session', data.session);
+                    toast.success('Account created successfully!');
+                    router.navigateTo('/dashboard');
+                } else {
+                    toast.success('Account created! Please check your email to verify your account.');
+                    router.navigateTo('/verify-email');
+                }
             } catch (err) {
                 showError(getAuthErrorMessage(err));
             } finally {
